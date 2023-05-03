@@ -1,0 +1,21 @@
+.top-bar {
+    width: 100%;
+    height: 68px;
+    background-color: #1b87b5;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+.top-bar h1 {
+color: white;
+margin: 0;
+}
+
+.top-bar button{
+    min-width: 8%;
+    background-color: white;
+    color: #1b87b5;
+}

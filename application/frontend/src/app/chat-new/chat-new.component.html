@@ -1,12 +1,11 @@
-<section style="background-color: #eee;">
+<section style="background-color: #eee">
   <div class="container py-5">
     <div class="row d-flex justify-content-center">
-      <div class="col-md-2 col-lg-2 col-xl-2"></div>
       <div class="col-md-8 col-lg-8 col-xl-6">
         <div class="card">
           <div
             class="card-header d-flex justify-content-between align-items-center p-3"
-            style="border-top: 4px solid #ffa900;"
+            style="border-top: 4px solid #ffa900"
           >
             <h5 class="mb-0">IR Chatbot</h5>
             <div class="d-flex flex-row align-items-center">
@@ -19,7 +18,7 @@
             #scrollMe
             class="card-body"
             data-mdb-perfect-scrollbar="true"
-            style="position: relative; height: 500px; overflow: scroll;"
+            style="position: relative; height: 500px; overflow: scroll"
             [scrollTop]="scrollMe.scrollHeight"
           >
             <div *ngFor="let item of appService.messageArray">
@@ -31,12 +30,12 @@
                   <img
                     src="https://as1.ftcdn.net/v2/jpg/01/93/99/80/1000_F_193998027_0qmOrqCejnWoj6liueIilAr2yAqilCtc.jpg"
                     alt="avatar 1"
-                    style="width: 45px; height: 100%;"
+                    style="width: 45px; height: 100%"
                   />
                   <div>
                     <p
                       class="small p-2 ms-3 mb-3 rounded-3"
-                      style="background-color: #f5f6f7;"
+                      style="background-color: #f5f6f7"
                     >
                       {{ item.message }}
                     </p>
@@ -60,7 +59,7 @@
                     <img
                       src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
                       alt="avatar 1"
-                      style="width: 45px; height: 100%;"
+                      style="width: 45px; height: 100%"
                     />
                   </div>
                 </div>
@@ -93,7 +92,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2 col-lg-2 col-xl-2 d-flex topicbutton">
+      <!-- <div class="col-md-2 col-lg-2 col-xl-2 d-flex topicbutton">
         <div
           class="btn-group btn-group-vertical align-items-center justify-content-center"
           role="group"
@@ -175,7 +174,7 @@
             Healthcare
           </label>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </section>

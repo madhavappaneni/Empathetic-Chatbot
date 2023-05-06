@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { AppService } from '../app.service'
+import { Component, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-chat',
@@ -7,25 +7,27 @@ import { AppService } from '../app.service'
   styleUrls: ['./chat-new.component.css'],
 })
 export class ChatNewComponent implements OnInit {
-  title = 'IR Chatbot'
-  topic: string = 'All'
-  message = ''
-
+  title = 'NLP Chatbot';
+  topic: string = 'All';
+  message = '';
 
   constructor(public appService: AppService) {}
 
   ngOnInit() {}
 
   sendMessage() {
-    const data = { query: this.message, topic: this.topic.toLowerCase() }
-    this.appService.messageArray.push({ name: 'user', message: this.message })
-    this.appService.query(data).subscribe((response: any) => {
-      this.appService.messageArray.push({ name: 'bot', message: response.response })
-    })
-    this.message = ''
+    const data = { user_message: this.message };
+    this.appService.messageArray.push({ name: 'user', message: this.message });
+    this.appService.get_response(data).subscribe((response: any) => {
+      this.appService.messageArray.push({
+        name: 'bot',
+        message: response.chitchat_response,
+      });
+    });
+    this.message = '';
   }
 
   reset_filter() {
-    this.topic = 'all'
+    this.topic = 'all';
   }
 }

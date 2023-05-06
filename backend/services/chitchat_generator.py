@@ -4,9 +4,9 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 class ChitChatGenerator:
     def __init__(self, ):
         self.chitchat_model = T5ForConditionalGeneration.from_pretrained(
-            "madhavappaneni/t5-small-chit-chat", use_auth_token="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")
+            "madhavappaneni/t5-small-chit-chat-conv", use_auth_token="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")
         self.chitchat_tokenizer = T5Tokenizer.from_pretrained(
-            "madhavappaneni/t5-small-chit-chat", use_auth_token="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")
+            "madhavappaneni/t5-small-chit-chat-conv", use_auth_token="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")
 
     def generate_response(self, input_text, context):
         input_ids = self.chitchat_tokenizer.encode(

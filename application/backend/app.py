@@ -3,6 +3,7 @@ from flask_cors import CORS
 from services.dialog_manager import DialogManager
 from services.empathetic_dialog_generator import EmpatheticDialogGenerator
 from services.chitchat_generator import ChitChatGenerator
+from services.reddit_generator import RedditGenerator
 
 
 app = Flask(__name__)
@@ -10,6 +11,8 @@ CORS(app)
 dialog_manager = DialogManager()
 empathetic_dialog_generator = EmpatheticDialogGenerator()
 chitchat_generator = ChitChatGenerator()
+reddit_generator = RedditGenerator()
+
 
 app.debug = True  # Turn on debug mode
 
@@ -26,11 +29,18 @@ def chat():
 
     chitchat_response = chitchat_generator.generate_response(
         user_message, '')
-
+    reddit_response = reddit_generator.generate_response(
+        user_message, '')
     return {'bot_response': bot_response,
             'empathetic_dialog_response': empathetic_dialog_response,
-            'chitchat_response': chitchat_response}
+            'chitchat_response': chitchat_response,
+            'reddit_response': reddit_response}
 
 
 if __name__ == '__main__':
     app.run(port=8080)
+    
+    
+    
+# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "Hello, world!"}' http://127.0.0.1:8080/chat
+

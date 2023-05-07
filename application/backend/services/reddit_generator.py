@@ -54,7 +54,10 @@ class RedditGenerator:
 			top_p=0.95,
 			no_repeat_ngram_size=2
 		)
-        return beam_outputs[0] if len(beam_outputs) > 0 else ""
+        if len(beam_outputs) > 0:
+            return beam_outputs[0]  
+        else:
+            return ""
 
 	
     def generate_response(self, input_text, context):

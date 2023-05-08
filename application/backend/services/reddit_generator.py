@@ -37,27 +37,29 @@ class RedditGenerator:
         inp = self.reddit_tokenizer(input_text, return_tensors="pt")
         input_ids = inp["input_ids"]
         a = inp["attention_mask"]
-        beam_outputs = generate_with_question_stop(
-			prompt=input_text,
-			model=self.reddit_model,
-			tokenizer=self.reddit_tokenizer,
-			input_ids=input_ids,
-			attention_mask=a,
-			num_beams=3, 
-			early_stopping=True,
-			do_sample=True,
-			min_length=50,
-			num_return_sequences=3, 
-			max_length=150 + len(input_ids[0]),
-			temperature=1,
-			top_k=50,
-			top_p=0.95,
-			no_repeat_ngram_size=2
-		)
-        if len(beam_outputs) > 0:
-            return beam_outputs[0]  
-        else:
-            return ""
+        outputs = self.reddit_model.generate(input_ids, max_length=75, no_repeat_ngram_size=2)
+        generated_text = self.reddit_tokenizer.decode(outputs[0], skip_special_tokens=True)[len(input_text):]
+        while generated_text and generated_text[0] in string.punctuation:
+            generated_text = generated_text[1:].lstrip()
+        return generated_text
+        # beam_outputs = generate_with_question_stop(
+		# 	prompt=input_text,
+		# 	model=self.reddit_model,
+		# 	tokenizer=self.reddit_tokenizer,
+		# 	input_ids=input_ids,
+		# 	attention_mask=a,
+		# 	num_beams=3, 
+		# 	early_stopping=True,
+		# 	do_sample=True,
+		# 	min_length=50,
+		# 	num_return_sequences=2, 
+		# 	max_length=75, #100 + len(input_ids[0]),
+		# 	no_repeat_ngram_size=2
+		# )
+        # if len(beam_outputs) > 0:
+        #     return beam_outputs[0]  
+        # else:
+        #     return ""
 
 	
     def generate_response(self, input_text, context):

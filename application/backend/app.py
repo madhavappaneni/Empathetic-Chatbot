@@ -47,5 +47,5 @@ if __name__ == '__main__':
     
     
     
-# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "How to use excel?"}' http://127.0.0.1:8080/chat
+# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "How to use Reddit?"}' http://127.0.0.1:8080/chat
 

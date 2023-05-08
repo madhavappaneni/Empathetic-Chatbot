@@ -41,6 +41,8 @@ class RedditGenerator:
         generated_text = self.reddit_tokenizer.decode(outputs[0], skip_special_tokens=True)[len(input_text):]
         while generated_text and generated_text[0] in string.punctuation:
             generated_text = generated_text[1:].lstrip()
+        sentences = generated_text.split('.')
+        generated_text = '.'.join(sentences[:-1]).strip() 
         return generated_text
         # beam_outputs = generate_with_question_stop(
 		# 	prompt=input_text,

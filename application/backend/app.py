@@ -31,13 +31,12 @@ def chat():
 
     chitchat_response = chitchat_generator.generate_response(
         user_message, dialog_manager_response['context'])
-    # reddit_response = reddit_generator.generate_response(
-    #     user_message, '')
+    reddit_response = reddit_generator.generate_response(
+        user_message, '')
     return {'dialog_manager_response': dialog_manager_response,
             'empathetic_dialog_response': empathetic_dialog_response,
             'chitchat_response': chitchat_response,
-            # 'reddit_response': reddit_response
-            }
+            'reddit_response': reddit_response}
 
 
 if __name__ == '__main__':

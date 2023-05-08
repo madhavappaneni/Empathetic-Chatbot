@@ -22,25 +22,23 @@ def chat():
     data = request.get_json()
     user_message = data.get('user_message')
 
-    bot_response = dialog_manager.process_user_message(user_message)
-
+    dialog_manager_response = dialog_manager.process_user_message(user_message)
+    print(dialog_manager_response, 'dialog_manager_response')
     empathetic_dialog_response = empathetic_dialog_generator.generate_response(
-        user_message, '')
+        user_message, dialog_manager_response['context'])
+    print(dialog_manager_response['context'], 'context')
+    print(dialog_manager_response['context'], 'cache')
 
     chitchat_response = chitchat_generator.generate_response(
-        user_message, '')
-    reddit_response = reddit_generator.generate_response(
-        user_message, '')
-    return {'bot_response': bot_response,
+        user_message, dialog_manager_response['context'])
+    # reddit_response = reddit_generator.generate_response(
+    #     user_message, '')
+    return {'dialog_manager_response': dialog_manager_response,
             'empathetic_dialog_response': empathetic_dialog_response,
             'chitchat_response': chitchat_response,
-            'reddit_response': reddit_response}
+            # 'reddit_response': reddit_response
+            }
 
 
 if __name__ == '__main__':
     app.run(port=8080)
-    
-    
-    
-# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "Hello, world!"}' http://127.0.0.1:8080/chat
-

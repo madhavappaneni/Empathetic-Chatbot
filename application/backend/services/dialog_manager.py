@@ -96,7 +96,6 @@ class DialogManager:
         self.context = []  # running context, flushed after detecting discontinuity
         self.cache = []  # context cache, flushed at the end of the program, can be used to fetch previous context if elements in running context match an entry in cache
         self.last_input = None  # Last user utterance to track continuity
-        print('init successful')
 
     # Fetch entites from text.
     def entitiesFromText(self, utterance):
@@ -173,26 +172,15 @@ class DialogManager:
     def process_user_message(self, utterance):
         intent = self.inferIntent(utterance)
         topic = self.inferTopic(utterance)
-        self.track_context(utterance)
+        cache = self.cache.copy()
+        context = self.context.copy()
 
         output = {
             "intent": intent,
             "topic": topic,
-            "context": self.context,
-            "cache": self.cache
+            "context": context,
+            "cache": cache
         }
 
+        self.track_context(utterance)
         return output
-
-
-if __name__ == "__main__":
-    dm = DialogManager()
-    while 1:
-        utterance = input("prompt: \n")
-        i = dm.inferIntent(utterance)
-        t = dm.inferTopic(utterance)
-        dm.track_context(utterance)
-        print(dm.context)
-        print(dm.cache)
-        print('intent:', i)
-        print('topic:', t)

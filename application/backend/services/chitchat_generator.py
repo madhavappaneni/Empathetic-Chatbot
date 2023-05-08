@@ -9,8 +9,9 @@ class ChitChatGenerator:
             "madhavappaneni/t5-small-chit-chat-conv", use_auth_token="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")
 
     def generate_response(self, input_text, context):
+        input_sequence = f"{' '.join(context)}</s>{input_text}"
         input_ids = self.chitchat_tokenizer.encode(
-            input_text, return_tensors='pt')
+            input_sequence, return_tensors='pt')
         outputs = self.chitchat_model.generate(
             input_ids, max_length=50)
         generated_text = self.chitchat_tokenizer.decode(

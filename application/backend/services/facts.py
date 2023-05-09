@@ -6,6 +6,7 @@ Created on Thu Apr 20 23:30:58 2023
 """
 
 import requests
+from transformers import pipeline
 
 
 core_name = "NLP"
@@ -28,3 +29,7 @@ def fetchFacts(entity):
     return parseResponse(results)
 
 print(fetchFacts("Chandrababu Naidu"))
+
+summarizer = pipeline("summarization", model="philschmid/bart-large-cnn-samsum", do_sample=True)
+
+print(summarizer(fetchFacts("Chandrababu Naidu")))

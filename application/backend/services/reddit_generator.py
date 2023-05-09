@@ -70,4 +70,5 @@ class RedditGenerator:
 
 	
     def generate_response(self, input_text, context):
-        return self.generate_response_from_generator(input_text=input_text)
+        input_sequence = f"{' '.join(context)}</s>{input_text}"
+        return self.generate_response_from_generator(input_text=input_sequence)

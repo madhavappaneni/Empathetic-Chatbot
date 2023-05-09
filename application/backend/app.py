@@ -34,7 +34,7 @@ def chat():
         user_message, dialog_manager_response['context'])
     reddit_response = reddit_generator.generate_response(
         user_message, '')
-    reranked_responses = rerank([empathetic_dialog_response, chitchat_response, reddit_response], user_message)
+    reranked_responses = rerank(dialog_manager_response["intent_probs"], [chitchat_response, reddit_response, empathetic_dialog_response], user_message)
 
     return {'dialog_manager_response': dialog_manager_response,
             'reranked_response': reranked_responses[0][1],

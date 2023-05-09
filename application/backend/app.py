@@ -4,7 +4,8 @@ from services.dialog_manager import DialogManager
 from services.empathetic_dialog_generator import EmpatheticDialogGenerator
 from services.chitchat_generator import ChitChatGenerator
 from services.reddit_generator import RedditGenerator
-from services.bert_reranker import rerank
+# from services.bert_reranker import rerank
+from services.neural_reranker import rerank
 
 app = Flask(__name__)
 CORS(app)
@@ -36,7 +37,7 @@ def chat():
     reranked_responses = rerank([empathetic_dialog_response, chitchat_response, reddit_response], user_message)
 
     return {'dialog_manager_response': dialog_manager_response,
-            'reranked_response': reranked_responses[0][1],
+            'reranked_response': reranked_responses[0],
             'empathetic_dialog_response': empathetic_dialog_response,
             'chitchat_response': chitchat_response,
             'reddit_response': reddit_response}

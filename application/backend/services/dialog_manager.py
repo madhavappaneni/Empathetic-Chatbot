@@ -83,7 +83,7 @@ def wordEntityAlignment(encodings, entities):
             i+=1
             continue
         for j, nw in enumerate(words[i+1:]):
-            print("next_word "+nw)
+            # print("next_word "+nw)
             # print(updated_entities[nw][-3:])
             # print(updated_entities[w])
             if updated_entities[nw][-3:] == updated_entities[w][-3:]:
@@ -153,7 +153,7 @@ class DialogManager:
         # print(self.intent_model(encodings["input_ids"], attention_mask=encodings["attention_mask"])[0])
         logits = self.intent_model(encodings["input_ids"], attention_mask=encodings["attention_mask"])[0]
         result = logits.argmax(1)
-        print(logits)
+        # print(logits)
         probs = logits.softmax(1)
         result = self.intent_model(encodings["input_ids"], attention_mask=encodings["attention_mask"])[0].argmax(1)
         return label2intent[result.item()], probs[0].tolist()
@@ -189,18 +189,36 @@ class DialogManager:
             list(map(lambda x: self.context.append(x), entity_list))
             # return None
 
+    def process_user_message(self, utterance):
+        intent, intent_probs = self.inferIntent(utterance)
+        topic = self.inferTopic(utterance)
+        self.track_context(utterance)
+        cache = self.cache.copy()
+        context = self.context.copy()
 
-if __name__ == "__main__":
-    dm = DialogManager()
-    while 1:
-        utterance = input("prompt: \n")
-        i, ip = dm.inferIntent(utterance)
-        t = dm.inferTopic(utterance)
-        dm.track_context(utterance)
-        print(dm.context)
-        print(dm.cache)
-        print(i)
-        print(ip)
-        print(t)
+        output = {
+            "intent": intent,
+            "intent_probs": intent_probs,
+            "topic": topic,
+            "context": context,
+            "cache": cache
+        }
+
+        # self.track_context(utterance)
+        return output
+# if __name__ == "__main__":
+#     dm = DialogManager()
+#     while 1:
+#         utterance = input("prompt: \n")
+#         output = dm.process_user_message(utterance)
+#         print(output)
+        # i, ip = dm.inferIntent(utterance)
+        # t = dm.inferTopic(utterance)
+        # dm.track_context(utterance)
+        # print(dm.context)
+        # print(dm.cache)
+        # print(i)
+        # print(ip)
+        # print(t)
     
     

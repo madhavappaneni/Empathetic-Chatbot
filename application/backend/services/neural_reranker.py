@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-model_card = "microsoft/DialogRPT-updown"  
+model_card = "microsoft/DialogRPT-human-vs-rand"  
 tokenizer = AutoTokenizer.from_pretrained(model_card)
 model = AutoModelForSequenceClassification.from_pretrained(model_card)
 

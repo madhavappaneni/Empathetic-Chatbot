@@ -37,7 +37,7 @@ def chat():
     reranked_responses = rerank([empathetic_dialog_response, chitchat_response, reddit_response], user_message)
 
     return {'dialog_manager_response': dialog_manager_response,
-            'reranked_response': reranked_responses[0],
+            'reranked_response': reranked_responses[0][1],
             'empathetic_dialog_response': empathetic_dialog_response,
             'chitchat_response': chitchat_response,
             'reddit_response': reddit_response}
@@ -48,5 +48,5 @@ if __name__ == '__main__':
     
     
     
-# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "How to use Reddit?"}' http://127.0.0.1:8080/chat
+# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "How does climate change effect us?"}' http://127.0.0.1:8080/chat
 

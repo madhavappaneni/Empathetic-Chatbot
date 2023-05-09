@@ -4,8 +4,7 @@ from services.dialog_manager import DialogManager
 from services.empathetic_dialog_generator import EmpatheticDialogGenerator
 from services.chitchat_generator import ChitChatGenerator
 from services.reddit_generator import RedditGenerator
-# from services.bert_reranker import rerank
-from services.neural_reranker import rerank
+from services.bert_reranker import rerank
 
 app = Flask(__name__)
 CORS(app)

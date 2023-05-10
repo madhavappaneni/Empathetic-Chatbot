@@ -14,12 +14,12 @@ def score(cxt, hyp):
 def rerank(intent_probs, results, query):
 	# required list is list of reranked responses in order
     search_results = results
-    search_results = [(score(query, response).squeeze().item() * intent_probs[i], response) for i, response in enumerate(results)]
-    search_results = sorted(search_results, key=lambda x: -x[0])
-    print(search_results)
-    # search_results = [(score(query, response).squeeze().item(), response) for response in results]
+    # search_results = [(score(query, response).squeeze().item() * intent_probs[i], response) for i, response in enumerate(results)]
     # search_results = sorted(search_results, key=lambda x: -x[0])
     # print(search_results)
+    search_results = [(score(query, response).squeeze().item(), response) for response in results]
+    search_results = sorted(search_results, key=lambda x: -x[0])
+    print(search_results)
     
     return search_results
 

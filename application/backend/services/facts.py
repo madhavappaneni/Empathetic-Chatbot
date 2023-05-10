@@ -28,8 +28,10 @@ def fetchFacts(entity):
     results = requests.get(req_url)
     return parseResponse(results)
 
-print(fetchFacts("Chandrababu Naidu"))
+# print(fetchFacts("Chandrababu Naidu"))
 
 summarizer = pipeline("summarization", model="philschmid/bart-large-cnn-samsum", do_sample=True)
+def summarize(text):
+    return summarizer(fetchFacts(text))
 
-print(summarizer(fetchFacts("Chandrababu Naidu")))
+# print(summarizer(fetchFacts("Chandrababu Naidu")))

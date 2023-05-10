@@ -4,17 +4,18 @@ Created on Sat Apr 15 17:46:03 2023
 
 @author: prane
 """
-from transformers import AutoTokenizer, DistilBertForSequenceClassification, AutoModelForSequenceClassification, RobertaTokenizer, RobertaForSequenceClassification, AutoModelForTokenClassification, DataCollatorForTokenClassification
+from transformers import AutoTokenizer, DistilBertForSequenceClassification, AutoModelForSequenceClassification, RobertaTokenizer, RobertaForSequenceClassification, AutoModelForTokenClassification, DataCollatorForTokenClassification, pipeline
 from sentence_transformers.cross_encoder import CrossEncoder
 from sentence_transformers import SentenceTransformer, util
 from scipy.special import expit
 import torch
-from textblob import TextBlob
+# from textblob import TextBlob
 from functools import reduce
 
 # Enitity types
 label_names = ['O', 'B-PER', 'I-PER', 'B-ORG', 'I-ORG', 'B-LOC', 'I-LOC']
-
+id2label = {0: 'O', 1: 'B-PER', 2: 'I-PER', 3: 'B-ORG', 4: 'I-ORG', 5: 'B-LOC', 6: 'I-LOC'}
+label2id = {'O': 0, 'B-PER': 1, 'I-PER': 2, 'B-ORG': 3, 'I-ORG': 4, 'B-LOC': 5, 'I-LOC': 6}
 # Label to dataset map
 label2intent={
     0: 'chitchat',
@@ -33,73 +34,38 @@ label2topic={
     }    
 
 # correct spelling and combine corrected spelling with the original spelling.
-def spellFix(utterance):
-    sentence = TextBlob(utterance)
-    result = sentence.correct()
-    utterance = utterance.split(" ")
-    result = result.split(" ")
-    updated_sentence=[]
-    for i,w in enumerate(utterance):
-        updated_sentence.append(w)
-        if w != result[i]:
-            updated_sentence.append(result[i])
-    return reduce(lambda a,b: a+" "+b,updated_sentence) 
+# def spellFix(utterance):
+#     sentence = TextBlob(utterance)
+#     result = sentence.correct()
+#     utterance = utterance.split(" ")
+#     result = result.split(" ")
+#     updated_sentence=[]
+#     for i,w in enumerate(utterance):
+#         updated_sentence.append(w)
+#         if w != result[i]:
+#             updated_sentence.append(result[i])
+#     return reduce(lambda a,b: a+" "+b,updated_sentence) 
 
 # align tokenized words and entity tags with original words.
-def wordEntityAlignment(encodings, entities):
-    word_ids = encodings.word_ids()
-    i=0
-    ents = list(entities.keys())
-    # print(entities.values())
-    # print(len(word_ids))
-    # print(len(ents))
-    # print(word_ids)
-    # print(ents)
-    updated_entities = {}
-    entity_spans = {}
-    while i < len(ents):
-        if word_ids[i] is not None:
-            start, end = encodings.word_to_tokens(word_ids[i])
-            # print(start,end)
-            # print(ents[start:end])
-            word = reduce(lambda a,b:a+b, ents[start:end])
-            word = word.replace("#","")
-            updated_entities[word] = entities[ents[start]]
-            i+=(end-start)
-        else:    
-            i+=1
-    # for i, w in enumerate(updated_entities.keys()):
-    # print(updated_entities)
-    i = 0
-    words = list(updated_entities.keys())
-    while i < len(words):
-        w = words[i]
-        # print("word "+w)
-        span_word = w
-        if "I" in updated_entities[w]:
-            i+=1
-            continue
-        if updated_entities[w] == 'O':
-            i+=1
-            continue
-        for j, nw in enumerate(words[i+1:]):
-            # print("next_word "+nw)
-            # print(updated_entities[nw][-3:])
-            # print(updated_entities[w])
-            if updated_entities[nw][-3:] == updated_entities[w][-3:]:
-                span_word+=(" "+nw)
-                # print(span_word)
-                # continue
-            else:
-                break
-        i=i+j+2
-        # print(f"i is {i}")
-        entity_spans[span_word] = updated_entities[w][-3:]
-    
-    # filtered_span = {}
-    # for k,v in entity_spans.keys():
-    #     if v
-    return entity_spans
+def wordEntityAlignment(entities):
+    # print(entities)
+    entities = {e['word'] : e['entity_group'] for e in entities}
+    # words = list(entities.keys())
+    # i = 0
+    # entity_spans = {}
+    # print(entities)
+    # while i < len(words)-1:
+    #     if int(entities[words[i]]) == int(entities[words[i+1]])-1:
+    #         print("here")
+    #         entity_spans[words[i]+" "+words[i+1]] = label_names[int(entities[words[i]])][-3:]
+    #         i+=2
+    #     else:
+    #         print(i)
+    #         entity_spans[words[i]] = label_names[int(entities[words[i]])][-3:]
+    #         i+=1
+    # if int(entities[words[-1]]) in [1,3,5]:
+    #     entity_spans[words[-1]] = label_names[int(entities[words[-1]])][-3:]
+    return entities
 
 
 class DialogManager:
@@ -108,14 +74,16 @@ class DialogManager:
         self.topic_tokenizer =  AutoTokenizer.from_pretrained("bert-base-cased")
         # self.intent_tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
         self.intent_tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
-        self.ner_tokenizer =  AutoTokenizer.from_pretrained("sentientconch/ner_model", use_auth_token='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')
+        self.ner_tokenizer =  AutoTokenizer.from_pretrained("sentientconch/final_ner", use_auth_token='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')
         
         # Init models
         self.topic_model = AutoModelForSequenceClassification.from_pretrained("sentientconch/topic_classifier", num_labels=6, use_auth_token='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')
         # self.intent_model = RobertaForSequenceClassification.from_pretrained('sentientconch/intent_classifier_short_sent', num_labels=3, use_auth_token='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')
         self.intent_model = DistilBertForSequenceClassification.from_pretrained("sentientconch/intent_classifier_large", num_labels=3, use_auth_token='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')
-        self.ner_model = AutoModelForTokenClassification.from_pretrained("sentientconch/ner_model", use_auth_token='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')
+        # self.ner_model = AutoModelForTokenClassification.from_pretrained("sentientconch/final_ner", use_auth_token='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')
         
+        # self.ner_pipeline = pipeline(model=self.ner_model, tokenizer=self.ner_tokenizer,  aggregation_strategy="simple")
+        self.ner_pipeline = pipeline("ner", model="sentientconch/final_ner",aggregation_strategy="first", use_auth_token='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')
         # bi-encoder to measure sentence similarity
         self.besm = SentenceTransformer('all-mpnet-base-v2')
         
@@ -125,19 +93,8 @@ class DialogManager:
         
     # Fetch entites from text. 
     def entitiesFromText(self, utterance):
-        # utterance = spellFix(utterance)
-        # print(utterance)
-        encodings = self.ner_tokenizer([utterance], truncation=True, return_tensors='pt')
-        result = self.ner_model(encodings["input_ids"], attention_mask=encodings["attention_mask"])[0].argmax(2)
-        # print(result)
-        entities = {}
-        for i,enc in enumerate(encodings['input_ids'][0]):
-            if enc:
-                try:
-                    entities[self.ner_tokenizer.decode(enc)] = label_names[result[0][i]]
-                except:
-                    entities[self.ner_tokenizer.decode(enc)] = label_names[0]
-        entities = wordEntityAlignment(encodings, entities)
+        entities = self.ner_pipeline(utterance)
+        entities = wordEntityAlignment(entities)
         # print(entities)
         return entities
     
@@ -173,7 +130,7 @@ class DialogManager:
             return
         
         related = self.biencoder([text, self.last_input])
-        print(related)
+        # print(related)
         if related >= 0.3:
             entities = self.entitiesFromText(text)
             entity_list = [k for k,v in entities.items() if v != 'O' and '[CLS]' not in k and '[SEP]' not in k]
@@ -205,13 +162,24 @@ class DialogManager:
         }
 
         # self.track_context(utterance)
+        # print(output)
         return output
-# if __name__ == "__main__":
-#     dm = DialogManager()
-#     while 1:
-#         utterance = input("prompt: \n")
-#         output = dm.process_user_message(utterance)
-#         print(output)
+if __name__ == "__main__":
+    dm = DialogManager()
+    while 1:
+        utterance = input("prompt:\n")
+        entities = dm.entitiesFromText(utterance)
+        # for k,v in entities.items():
+        #     print(k+" : "+v)
+        print("Entities")
+        print(entities)
+        print("----------")
+        output = dm.process_user_message(utterance)
+        for k,v in output.items():
+            print(k)
+            print(v)
+            print("---------")
+        print(output)
         # i, ip = dm.inferIntent(utterance)
         # t = dm.inferTopic(utterance)
         # dm.track_context(utterance)

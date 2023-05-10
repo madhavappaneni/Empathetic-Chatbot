@@ -4,7 +4,8 @@ from services.dialog_manager import DialogManager
 from services.empathetic_dialog_generator import EmpatheticDialogGenerator
 from services.chitchat_generator import ChitChatGenerator
 from services.reddit_generator import RedditGenerator
-
+# from services.bert_reranker import rerank
+from services.neural_reranker import rerank
 
 app = Flask(__name__)
 CORS(app)
@@ -33,7 +34,10 @@ def chat():
         user_message, dialog_manager_response['context'])
     reddit_response = reddit_generator.generate_response(
         user_message, '')
+    reranked_responses = rerank(dialog_manager_response["intent_probs"], [chitchat_response, reddit_response, empathetic_dialog_response], user_message)
+
     return {'dialog_manager_response': dialog_manager_response,
+            'reranked_response': reranked_responses[0][1],
             'empathetic_dialog_response': empathetic_dialog_response,
             'chitchat_response': chitchat_response,
             'reddit_response': reddit_response}
@@ -41,3 +45,8 @@ def chat():
 
 if __name__ == '__main__':
     app.run(port=8080)
+    
+    
+    
+# curl -X POST -H "Content-Type: application/json" -d '{"user_message": "How does climate change effect us?"}' http://127.0.0.1:8080/chat
+

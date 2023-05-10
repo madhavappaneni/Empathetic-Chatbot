@@ -21,7 +21,7 @@ export class ChatNewComponent implements OnInit {
     this.appService.get_response(data).subscribe((response: any) => {
       this.appService.messageArray.push({
         name: 'bot',
-        message: response.reranked_response,
+        message: response.chat_bot_response,
       });
     });
     this.message = '';

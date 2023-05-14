@@ -1,4 +1,4 @@
-1. The training and evaluation notebooks for the Chitchat Generator can be found here.
+1. The training and evaluation code for the Chitchat Generator can be found here.
 
 | Name                                       |                          Location                           | Task Owner                 |
 | :----------------------------------------- | :---------------------------------------------------------: | -------------------------- |
@@ -7,7 +7,7 @@
 | ChitChat Generator - Milestone2 Training   |        [Link](milestone2/madhavap/ChitChatGenerator)        | Madhav Appaneni (madhavap) |
 | ChitChat Generator - Milestone2 Evaluation | [Link](evaluation/madhavap/milestone2/ChitChat%20Generator) | Madhav Appaneni (madhavap) |
 
-2. The training and evaluation notebooks for the Empathetic Dialog Generator can be found here.
+2. The training and evaluation code for the Empathetic Dialog Generator can be found here.
 
 | Name                                                |                                 Location                                 | Task Owner                 |
 | :-------------------------------------------------- | :----------------------------------------------------------------------: | -------------------------- |

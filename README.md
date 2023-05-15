@@ -20,7 +20,7 @@
 
 | Name                                     |                                              Location                                              | Task Owner                  |
 | :--------------------------------------- | :------------------------------------------------------------------------------------------------: | --------------------------- |
-| Reddit Generator - Final Training        |                        [Link](final/skunusot/RedditdataGPT2Training.ipynb)                         | Sandeep Kunusoth (skunusot) |
+| Reddit Generator - Final Training        |                        [Link](milestone3/skunusot/RedditdataGPT2Training.ipynb)                         | Sandeep Kunusoth (skunusot) |
 | Reddit Generator - Final Evaluation      |                  [Link](evaluation/skunusot/final/RedditdataGPT2Evaluation.ipynb)                  | Sandeep Kunusoth (skunusot) |
 | Reddit Generator - Milestone2 Training   |                      [Link](milestone2/skunusot/RedditdataGPT2Training.ipynb)                      | Sandeep Kunusoth (skunusot) |
 | Reddit Generator - Milestone2 Evaluation |               [Link](evaluation/skunusot/milestone2/RedditdataGPT2Evaluation.ipynb)                | Sandeep Kunusoth (skunusot) |
